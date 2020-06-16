@@ -63,12 +63,13 @@ class AnbtSql
 
       # __foo
       # ____KW
-      @kw_plus1_indent_x_nl = %w(INSERT INTO CREATE DROP TRUNCATE TABLE CASE)
+      # @kw_plus1_indent_x_nl = %w(INSERT INTO CREATE DROP TRUNCATE TABLE CASE)
+      @kw_plus1_indent_x_nl = %w()
 
       # ____foo
       # __KW
       # ____bar
-      @kw_minus1_indent_nl_x_plus1_indent = %w(FROM WHERE SET HAVING)
+      @kw_minus1_indent_nl_x_plus1_indent = %w(FROM WHERE SET HAVING WITH)
       @kw_minus1_indent_nl_x_plus1_indent.concat ["ORDER BY", "GROUP BY"]
 
       # __foo
@@ -111,7 +112,9 @@ class AnbtSql
          "FROM_DAYS", "DATE_FORMAT", "TIME_FORMAT", "CURDATE",
          "CURRENT_DATE", "CURTIME", "CURRENT_TIME", "NOW", "SYSDATE",
          "CURRENT_TIMESTAMP", "UNIX_TIMESTAMP", "FROM_UNIXTIME",
-         "SEC_TO_TIME", "TIME_TO_SEC"
+         "SEC_TO_TIME", "TIME_TO_SEC",
+         # redshift functions
+         "DATEADD", "DATE_TRUNC", "CONVERT_TIMEZONE", "GETDATE", "TRUNC"
         ]
     end
 

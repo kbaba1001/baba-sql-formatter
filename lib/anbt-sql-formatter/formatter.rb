@@ -145,22 +145,30 @@ class AnbtSql
         if (prev._type  != AnbtSql::TokenConstants::SPACE &&
             token._type != AnbtSql::TokenConstants::SPACE)
           # カンマの後にはスペース入れない
-          if not @rule.space_after_comma
-            if prev.string == ","
-              index += 1 ; next
-            end
-          end
+          # if not @rule.space_after_comma
+          #   if prev.string == ","
+          #     index += 1 ; next
+          #   end
+          # end
+
+          # TRUNC(created_at)=DATE_TRUNC('week',CONVERT_TIMEZONE('JST',GETDATE()))
+          # TRUNC(created_at) = DATE_TRUNC('week', CONVERT_TIMEZONE('JST', GETDATE()))
 
           # 関数名の後ろにはスペースは入れない
           # no space after function name
-          if (@rule.function?(prev.string) &&
-              token.string == "(")
-            index += 1 ; next
-          end
+          # if (@rule.function?(prev.string) && token.string == "(")
+          #   index += 1 ; next
+          # end
 
-          ArrayUtil.add(tokens, index,
-                     AnbtSql::Token.new(AnbtSql::TokenConstants::SPACE, " ")
-                     )
+          # TODO スペースの入れ方を変えたい
+
+          # = の前後にスペースを入れる
+          if ((prev._type == AnbtSql::TokenConstants::SYMBOL && prev.string == '=') ||
+              (token._type == AnbtSql::TokenConstants::SYMBOL && token.string == '='))
+            ArrayUtil.add(tokens, index, AnbtSql::Token.new(AnbtSql::TokenConstants::SPACE, " "))
+          end
+          # 関数内の()であれば , の後ろにスペースを入れる
+          # ArrayUtil.add(tokens, index, AnbtSql::Token.new(AnbtSql::TokenConstants::SPACE, " "))
         end
         index += 1
       end
@@ -220,7 +228,7 @@ class AnbtSql
           if (equals_ignore_case(token.string, "DELETE") ||
               equals_ignore_case(token.string, "SELECT") ||
               equals_ignore_case(token.string, "UPDATE")   )
-            indent += 2
+            indent += 1
             index += insert_return_and_indent(tokens, index + 1, indent, "+2")
           end
 
@@ -283,6 +291,7 @@ class AnbtSql
 
           if token.string.start_with?("/*")
             # マルチラインコメントの後に改行を入れる。
+            index += insert_return_and_indent(tokens, index, indent)
             index += insert_return_and_indent(tokens, index + 1, indent)
           elsif token.string.start_with?("--")
             index += insert_return_and_indent(tokens, index + 1, indent)
