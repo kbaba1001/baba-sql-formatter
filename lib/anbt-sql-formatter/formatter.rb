@@ -136,6 +136,7 @@ class AnbtSql
 
     def insert_space_between_tokens(tokens)
       index = 1
+      inner_function_flag = false
 
       # Length of tokens changes in loop!
       while index < tokens.size
@@ -144,31 +145,23 @@ class AnbtSql
 
         if (prev._type  != AnbtSql::TokenConstants::SPACE &&
             token._type != AnbtSql::TokenConstants::SPACE)
-          # カンマの後にはスペース入れない
-          # if not @rule.space_after_comma
-          #   if prev.string == ","
-          #     index += 1 ; next
-          #   end
-          # end
-
-          # TRUNC(created_at)=DATE_TRUNC('week',CONVERT_TIMEZONE('JST',GETDATE()))
-          # TRUNC(created_at) = DATE_TRUNC('week', CONVERT_TIMEZONE('JST', GETDATE()))
-
-          # 関数名の後ろにはスペースは入れない
-          # no space after function name
-          # if (@rule.function?(prev.string) && token.string == "(")
-          #   index += 1 ; next
-          # end
-
-          # TODO スペースの入れ方を変えたい
 
           # = の前後にスペースを入れる
           if ((prev._type == AnbtSql::TokenConstants::SYMBOL && prev.string == '=') ||
               (token._type == AnbtSql::TokenConstants::SYMBOL && token.string == '='))
             ArrayUtil.add(tokens, index, AnbtSql::Token.new(AnbtSql::TokenConstants::SPACE, " "))
           end
+
           # 関数内の()であれば , の後ろにスペースを入れる
-          # ArrayUtil.add(tokens, index, AnbtSql::Token.new(AnbtSql::TokenConstants::SPACE, " "))
+          if @rule.function?(prev.string)
+            inner_function_flag = true
+          end
+          if prev._type == AnbtSql::TokenConstants::SYMBOL && prev.string == ')'
+            inner_function_flag = false
+          end
+          if inner_function_flag && prev.string == ","
+            ArrayUtil.add(tokens, index, AnbtSql::Token.new(AnbtSql::TokenConstants::SPACE, " "))
+          end
         end
         index += 1
       end
