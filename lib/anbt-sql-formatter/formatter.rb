@@ -152,7 +152,10 @@ class AnbtSql
             ArrayUtil.add(tokens, index, AnbtSql::Token.new(AnbtSql::TokenConstants::SPACE, " "))
           end
 
+          #
+
           # 関数内の()であれば , の後ろにスペースを入れる
+          # TODO ネストした関数の対応が不十分。stackに積んだほうがよい
           if @rule.function?(prev.string)
             inner_function_flag = true
           end
@@ -174,8 +177,7 @@ class AnbtSql
       # 丸カッコのインデント位置を覚える。
       bracket_indent = Stack.new
 
-      prev = AnbtSql::Token.new(AnbtSql::TokenConstants::SPACE,
-                                  " ")
+      prev = AnbtSql::Token.new(AnbtSql::TokenConstants::SPACE, " ")
 
       encounter_between = false
       in_values_checker = nil
@@ -217,12 +219,13 @@ class AnbtSql
 
           in_values_checker = AnbtSql::InValuesChecker.new(@rule) if equals_ignore_case(token.string, "IN")
 
-          # indentを２つ増やし、キーワードの後ろで改行
+          # キーワードの前で改行して、indentを１つ増やしキーワードの後ろで改行
           if (equals_ignore_case(token.string, "DELETE") ||
               equals_ignore_case(token.string, "SELECT") ||
               equals_ignore_case(token.string, "UPDATE")   )
+            index += insert_return_and_indent(tokens, index, indent)
             indent += 1
-            index += insert_return_and_indent(tokens, index + 1, indent, "+2")
+            index += insert_return_and_indent(tokens, index + 1, indent)
           end
 
           # indentを１つ増やし、キーワードの後ろで改行
@@ -283,7 +286,7 @@ class AnbtSql
         elsif (token._type == AnbtSql::TokenConstants::COMMENT)
 
           if token.string.start_with?("/*")
-            # マルチラインコメントの後に改行を入れる。
+            # マルチラインコメントの前後に改行を入れる。
             index += insert_return_and_indent(tokens, index, indent)
             index += insert_return_and_indent(tokens, index + 1, indent)
           elsif token.string.start_with?("--")
