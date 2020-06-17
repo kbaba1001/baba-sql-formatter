@@ -64,7 +64,7 @@ class AnbtSql
       # __foo
       # ____KW
       # @kw_plus1_indent_x_nl = %w(INSERT INTO CREATE DROP TRUNCATE TABLE CASE)
-      @kw_plus1_indent_x_nl = %w()
+      @kw_plus1_indent_x_nl = %w(CASE)
 
       # ____foo
       # __KW
