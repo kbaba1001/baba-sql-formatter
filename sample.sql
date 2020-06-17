@@ -40,7 +40,7 @@ drop table table1,table2
 
 --------------------------------
 -- 1-09
-    CREATE TABLE table1 (colID DECIMAL( 10),name    CHAR VARYING(40),PRIMARY KEY(colID)        ); 
+    CREATE TABLE table1 (colID DECIMAL( 10),name    CHAR VARYING(40),PRIMARY KEY(colID)        );
 
 --------------------------------
 -- 2-01
@@ -90,9 +90,11 @@ INSERT INTO table1 VALUES (1000,'ABC',256
 
 --------------------------------
 -- 4-01
-SELECT a ,avg (b * case when c is null then 0 else c End) from t1 left outer join s Using (a) group by e
+SELECT a ,avg (b * case when c is null then 0 when d is null and e = 'eee' then 1 else c end) from t1 left outer join s Using (a) group by e
 ;
 
+SELECT a ,case when c is null then 0 when d is null and e = 'eee' then 1 else c end from t1 left outer join s Using (a) group by e
+;
 --------------------------------
 -- 4-02
 SELECT a ,MAX (b) FROM table_c GROUP BY a having MAX (b) > 10
