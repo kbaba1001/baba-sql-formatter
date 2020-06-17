@@ -78,7 +78,7 @@ class AnbtSql
 
       # __foo
       # __KW
-      @kw_nl_x = %w(OR WHEN ELSE)
+      @kw_nl_x = %w(OR WHEN ELSE LEFT RIGHT INNER CROSS)
 
       @kw_multi_words = ["ORDER BY", "GROUP BY"]
 
