@@ -138,6 +138,8 @@ class AnbtSql
       index = 1
       inner_function_flag = false
 
+      insert_space_target = %w(<> <= >= || != = < > & % | * + -)
+
       # Length of tokens changes in loop!
       while index < tokens.size
         prev  = ArrayUtil.get(tokens, index - 1)
@@ -146,9 +148,9 @@ class AnbtSql
         if (prev._type  != AnbtSql::TokenConstants::SPACE &&
             token._type != AnbtSql::TokenConstants::SPACE)
 
-          # = の前後にスペースを入れる
-          if ((prev._type == AnbtSql::TokenConstants::SYMBOL && prev.string == '=') ||
-              (token._type == AnbtSql::TokenConstants::SYMBOL && token.string == '='))
+          # insert_space_target の前後にスペースを入れる
+          if ((prev._type == AnbtSql::TokenConstants::SYMBOL && insert_space_target.include?(prev.string)) ||
+              (token._type == AnbtSql::TokenConstants::SYMBOL && insert_space_target.include?(token.string)))
             ArrayUtil.add(tokens, index, AnbtSql::Token.new(AnbtSql::TokenConstants::SPACE, " "))
           end
 
