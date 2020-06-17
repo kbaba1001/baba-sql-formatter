@@ -152,7 +152,13 @@ class AnbtSql
             ArrayUtil.add(tokens, index, AnbtSql::Token.new(AnbtSql::TokenConstants::SPACE, " "))
           end
 
-          #
+          # AS の前後のスペースを整える
+          if prev.string == 'AS' && token.string == '('
+            ArrayUtil.add(tokens, index, AnbtSql::Token.new(AnbtSql::TokenConstants::SPACE, " "))
+          end
+          if prev.string == ')' && token.string == 'AS'
+            ArrayUtil.add(tokens, index, AnbtSql::Token.new(AnbtSql::TokenConstants::SPACE, " "))
+          end
 
           # 関数内の()であれば , の後ろにスペースを入れる
           # TODO ネストした関数の対応が不十分。stackに積んだほうがよい
