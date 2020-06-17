@@ -74,11 +74,11 @@ class AnbtSql
 
       # __foo
       # ____KW
-      @kw_nl_x_plus1_indent = %w(ON USING)
+      @kw_nl_x_plus1_indent = %w(ON USING THEN)
 
       # __foo
       # __KW
-      @kw_nl_x = %w(OR THEN ELSE)
+      @kw_nl_x = %w(OR ELSE)
       # @kw_nl_x = %w(OR WHEN ELSE)
 
       @kw_multi_words = ["ORDER BY", "GROUP BY"]
