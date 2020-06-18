@@ -70,17 +70,40 @@ class AnbtSql
       # __KW
       # ____bar
       @kw_minus1_indent_nl_x_plus1_indent = %w(FROM WHERE SET HAVING WITH)
-      @kw_minus1_indent_nl_x_plus1_indent.concat ["ORDER BY", "GROUP BY"]
+      @kw_minus1_indent_nl_x_plus1_indent.concat ["PARTITION BY", "ORDER BY", "GROUP BY"]
 
       # __foo
       # ____KW
-      @kw_nl_x_plus1_indent = %w(ON USING THEN)
+      @kw_nl_x_plus1_indent = %w(USING THEN)
+      # @kw_nl_x_plus1_indent = %w(USING THEN)
 
       # __foo
       # __KW
-      @kw_nl_x = %w(OR WHEN ELSE LEFT RIGHT INNER CROSS)
+      @kw_nl_x = %w(
+        ON
+        OR
+        WHEN
+        ELSE
+        LEFT\ JOIN
+        LEFT\ OUTER\ JOIN
+        RIGHT\ JOIN
+        RIGHT\ OUTER\ JOIN
+        INNER\ JOIN
+        CROSS\ JOIN
+      )
 
-      @kw_multi_words = ["ORDER BY", "GROUP BY"]
+      @kw_multi_words = [
+        "PARTITION BY",
+        "ORDER BY",
+        "GROUP BY",
+        "LEFT JOIN",
+        "LEFT OUTER JOIN",
+        "RIGHT JOIN",
+        "RIGHT OUTER JOIN",
+        "INNER JOIN",
+        "CROSS JOIN",
+        "AT TIME ZONE"
+      ]
 
       # 関数の名前。
       # Java版は初期値 null
