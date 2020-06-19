@@ -31,6 +31,7 @@ class AnbtSql
     attr_accessor :kw_minus1_indent_nl_x_plus1_indent
     attr_accessor :kw_nl_x
     attr_accessor :kw_nl_x_plus1_indent
+    attr_accessor :kw_x_nl_plus1_indent
 
     # Limit number of values per line in IN clause to this value.
     #
@@ -74,8 +75,19 @@ class AnbtSql
 
       # __foo
       # ____KW
-      @kw_nl_x_plus1_indent = %w(USING THEN)
+      @kw_nl_x_plus1_indent = %w(USING)
       # @kw_nl_x_plus1_indent = %w(USING THEN)
+
+      # __KW
+      # ____foo
+      @kw_x_nl_plus1_indent = %w(
+        LEFT\ JOIN
+        LEFT\ OUTER\ JOIN
+        RIGHT\ JOIN
+        RIGHT\ OUTER\ JOIN
+        INNER\ JOIN
+        CROSS\ JOIN
+      )
 
       # __foo
       # __KW
@@ -84,12 +96,6 @@ class AnbtSql
         OR
         WHEN
         ELSE
-        LEFT\ JOIN
-        LEFT\ OUTER\ JOIN
-        RIGHT\ JOIN
-        RIGHT\ OUTER\ JOIN
-        INNER\ JOIN
-        CROSS\ JOIN
       )
 
       @kw_multi_words = [
@@ -102,7 +108,8 @@ class AnbtSql
         "RIGHT OUTER JOIN",
         "INNER JOIN",
         "CROSS JOIN",
-        "AT TIME ZONE"
+        "AT TIME ZONE",
+        "UNION ALL"
       ]
 
       # 関数の名前。

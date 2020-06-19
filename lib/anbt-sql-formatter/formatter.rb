@@ -272,12 +272,20 @@ class AnbtSql
 
           # キーワードの前で改行。indentを強制的に０にする。
           if (equals_ignore_case(token.string, "UNION"    ) ||
+              equals_ignore_case(token.string, "UNION ALL") ||
               equals_ignore_case(token.string, "INTERSECT") ||
               equals_ignore_case(token.string, "EXCEPT"   )   )
-            indent -= 2
+            indent -= 1
             index += insert_return_and_indent(tokens, index    , indent)
             index += insert_return_and_indent(tokens, index + 1, indent)
           end
+
+          if @rule.kw_x_nl_plus1_indent.any? { |kw| equals_ignore_case(token.string, kw) }
+            # キーワードの前後で改行、インデント+1
+            index += insert_return_and_indent(tokens, index, indent)
+            index += insert_return_and_indent(tokens, index + 1, indent + 1)
+          end
+
 
           if equals_ignore_case(token.string, "BETWEEN")
             encounter_between = true
@@ -290,7 +298,6 @@ class AnbtSql
             end
             encounter_between = false
           end
-
         elsif (token._type == AnbtSql::TokenConstants::COMMENT)
 
           if token.string.start_with?("/*")
